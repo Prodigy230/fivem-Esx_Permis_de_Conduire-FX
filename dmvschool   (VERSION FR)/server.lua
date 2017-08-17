@@ -5,14 +5,15 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 --[[DMV TheoryTest]]--
 RegisterServerEvent("dmv:success")
 AddEventHandler("dmv:success", function()
-   local xPlayer = ESX.GetPlayerFromId(source)
-	
-	MySQL.Async.execute(
-		'UPDATE users SET DmvTest= "Passed" ',
-		{
-			['@identifier']    = xPlayer.identifier
-		}
-	)
+    local _source        = source
+    local xPlayer        = ESX.GetPlayerFromId(_source)
+  
+  MySQL.Async.execute(
+    'UPDATE users SET DmvTest = "Passed" WHERE identifier = @identifier',
+    {
+      ['@identifier']    = xPlayer.identifier
+    }
+  )
         
 end)
 
