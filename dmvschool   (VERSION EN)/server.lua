@@ -7,13 +7,13 @@ RegisterServerEvent("dmv:success")
 AddEventHandler("dmv:success", function()
     local _source        = source
     local xPlayer        = ESX.GetPlayerFromId(_source)
-  
-  MySQL.Async.execute(
-    'UPDATE users SET DmvTest = "Passed" WHERE identifier = @identifier',
-    {
-      ['@identifier']    = xPlayer.identifier
-    }
-  )
+	
+	MySQL.Async.execute(
+		'UPDATE users SET DmvTest = "Passed" WHERE identifier = @identifier',
+		{
+			['@identifier']    = xPlayer.identifier
+		}
+	)
         
 end)
 
@@ -45,8 +45,7 @@ AddEventHandler("dmv:dtcharge", function()
 end)
 
 ESX.RegisterServerCallback("dmv:LicenseStatus", function(source, cb)
-    local _source        = source
-    local xPlayer        = ESX.GetPlayerFromId(_source)
+    local xPlayer        = ESX.GetPlayerFromId(source)
     MySQL.Async.fetchAll(
         'SELECT * FROM users WHERE identifier = @identifier',
         {
