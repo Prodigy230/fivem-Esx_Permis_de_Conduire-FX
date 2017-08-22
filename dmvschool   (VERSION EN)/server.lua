@@ -45,7 +45,8 @@ AddEventHandler("dmv:dtcharge", function()
 end)
 
 ESX.RegisterServerCallback("dmv:LicenseStatus", function(source, cb)
-    local xPlayer        = ESX.GetPlayerFromId(source)
+	local _source        = source
+	local xPlayer        = ESX.GetPlayerFromId(_source)
     MySQL.Async.fetchAll(
         'SELECT * FROM users WHERE identifier = @identifier',
         {
