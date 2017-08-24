@@ -44,7 +44,7 @@ AddEventHandler("dmv:dtcharge", function()
     end)
 end)
 
-ESX.RegisterServerCallback("dmv:LicenseStatus", function(source, cb)
+ESX.RegisterServerCallback("dmv:LicenseStatus", function(_source , cb)
 	local _source        = source
 	local xPlayer        = ESX.GetPlayerFromId(_source)
     MySQL.Async.fetchAll(
