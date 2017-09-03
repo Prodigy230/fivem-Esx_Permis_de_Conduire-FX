@@ -47,13 +47,34 @@ local DTutOpen = false
 
 --[[Events]]--
 
-AddEventHandler("playerSpawned", function()
+--[[AddEventHandler("playerSpawned", function()
 	ESX.TriggerServerCallback('dmv:LicenseStatus', function(data)
     if (data == "Required") then
             TriggerEvent('dmv:CheckLicStatus')
         end
 end)
 end)
+]]--
+
+
+AddEventHandler("playerSpawned", function()
+	Wait(1000)
+	TriggerServerEvent('dmv:getlicence')
+end)
+
+
+
+RegisterNetEvent('dmv:getlicense_client')
+AddEventHandler('dmv:getlicense_client', function(data)
+--Check if player has completed theory test
+	--DrawMissionText2(data, 5000)	
+	if (data == "Required") then
+            TriggerEvent('dmv:CheckLicStatus')
+    end
+end)
+
+
+
 
 TestDone = 0
 
@@ -62,6 +83,9 @@ AddEventHandler('dmv:CheckLicStatus', function()
 --Check if player has completed theory test
 	TestDone = 1
 end)
+
+
+
 
 --[[Functions]]--
 
@@ -116,7 +140,9 @@ CruiseControl = 0
 Error = 0
 
 function startttest()
+
         if TestDone == 0 or testblock == 1 then
+        	
 			DrawMissionText2("~r~Repassez plus tard", 5000)			
 		else
 			TriggerServerEvent('dmv:ttcharge')
@@ -143,11 +169,11 @@ end
 
 function EndDTest()
         if Error >= maxErrors then
-			drawNotification("\nVoici vos point accumulez ".. Error..".")
+			drawNotification("\nVoici vos mauvais points ".. Error..".")
 			EndTestTasks()
 		else
 			TriggerServerEvent('dmv:successconduite')
-			drawNotification("Bravo, Vous avez obtenu votre permis\nPoint accumulez ".. Error..".")	
+			drawNotification("Bravo, Vous avez obtenu votre permis\nMauvais points ".. Error..".")	
 			EndTestTasks()
 		end
 end
@@ -207,7 +233,7 @@ function DTut()
 		SetEntityCoords(myPed,238.70791625977, -1394.7208251953, -1394.7208251953,true, false, false,true)
 	    SetEntityHeading(myPed, 314.39)
 		TriggerEvent("pNotify:SendNotification",{
-            text = "<b style='color:#1E90FF'>Instructeur:</b> <br /><br /> Nous préparons actuellement votre véhicule pour le test, pendant ce temps, vous devriez lire quelques lignes importantes.<br /><br /><b style='color:#87CEFA'>Limitation de vitesse:</b><br />- Faites attention au trafic et restez sous leFaites attention au trafic et restez sous le <b style='color:#A52A2A'>la vitesse</b> limite<br /><br />- À l'heure actuelle, vous devriez connaître les bases, mais nous essaierons de vous rappeler chaque fois que vous <b style='color:#DAA520'>entrée/sortie</b> Une zone avec une limite de vitesse affichée",
+            text = "<b style='color:#1E90FF'>Instructeur:</b> <br /><br /> Nous préparons actuellement votre véhicule pour le test, pendant ce temps, vous devriez lire ces quelques points importants.<br /><br /><b style='color:#87CEFA'>Limitation de vitesse:</b><br />- Faites attention au trafic et restez sous <b style='color:#A52A2A'>la vitesse</b> maximale<br /><br />- À l'heure actuelle, vous devriez connaître les bases, mais nous essaierons de vous rappeler chaque fois que vous <b style='color:#DAA520'>entrez/sortez</b> d'une zone avec une limite de vitesse affichée",
             type = "alert",
             timeout = (15000),
             layout = "center",
@@ -215,7 +241,7 @@ function DTut()
         })
 		Citizen.Wait(16500)
 		TriggerEvent("pNotify:SendNotification",{
-            text = "<b style='color:#1E90FF'>Instructeur:</b> <br /><br /> Utilisez le <b style='color:#DAA520'>Régulateur de vitesse</b> Caractéristique à éviter <b style='color:#87CEFA'>excès de vitesse</b>, Activez-le pendant le test en appuyant sur le bouton <b style='color:#20B2AA'>X</b> Bouton sur votre clavier A sur votre manette.<br /><br /><b style='color:#87CEFA'>Evaluation:</b><br />- Essayez de ne pas écraser le véhicule ou dépassez la limite de vitesse affichée. Vous allez recevoir des <b style='color:#A52A2A'>Mauvais Points</b> Chaque fois que vous ne respectez pas ces règles<br /><br />- Trop <b style='color:#A52A2A'>de Mauvais Points</b> Accumulée entraînera un <b style='color:#A52A2A'>Test</b> Rater",
+            text = "<b style='color:#1E90FF'>Instructeur:</b> <br /><br /> Utilisez le <b style='color:#DAA520'>Régulateur de vitesse</b> pour éviter <b style='color:#87CEFA'>les excès de vitesse</b>, Activez-le pendant le test en appuyant sur le bouton <b style='color:#20B2AA'>X</b> Bouton sur votre clavier A sur votre manette.<br /><br /><b style='color:#87CEFA'>Evaluation:</b><br />- Essayez de ne pas abîmer le véhicule ou de dépasser les limitations de vitesse. Vous allez recevoir des <b style='color:#A52A2A'>Mauvais Points</b> Chaque fois que vous ne respectez pas ces règles<br /><br />- Trop <b style='color:#A52A2A'>de Mauvais Points</b> entraînera un <b style='color:#A52A2A'>Echec</b>",
             type = "alert",
             timeout = (15000),
             layout = "center",
@@ -255,7 +281,7 @@ Citizen.CreateThread(function()
 		    end
 			onTestBlipp = AddBlipForCoord(271.8747253418,-1370.5744628906,31.932783126831)
 			N_0x80ead8e2e1d5d52e(onTestBlipp)
-		    DrawMissionText2("Aller au prochain point !", 5000)
+		    DrawMissionText2("Allez au prochain point !", 5000)
 			onTestEvent = 2
 		end
 	end
@@ -270,7 +296,7 @@ Citizen.CreateThread(function()
 			onTestBlipp = AddBlipForCoord(234.90780639648,-1345.3854980469, 30.542045593262)
 			N_0x80ead8e2e1d5d52e(onTestBlipp)
 			SetBlipRoute(onTestBlipp, 1)
-		    DrawMissionText2("Aller au prochain point!", 5000)
+		    DrawMissionText2("Allez au prochain point!", 5000)
 			onTestEvent = 3		
 		end
 	end
@@ -285,12 +311,12 @@ Citizen.CreateThread(function()
 			onTestBlipp = AddBlipForCoord(217.82102966309,-1410.5201416016,29.292112350464)
 			N_0x80ead8e2e1d5d52e(onTestBlipp)
 			SetBlipRoute(onTestBlipp, 1)
-		    DrawMissionText2("Faite un ~r~stop~s~ pour le passage ~y~pietont", 5000)
+		    DrawMissionText2("Faite un ~r~arrêt~s~ pour le passage ~y~piétons", 5000)
 			PlaySound(-1, "RACE_PLACED", "HUD_AWARDS", 0, 0, 1)
 			FreezeEntityPosition(GetVehiclePedIsUsing(GetPlayerPed(-1)), true) -- Freeze Entity
 			Citizen.Wait(4000)
 			FreezeEntityPosition(GetVehiclePedIsUsing(GetPlayerPed(-1)), false) -- Freeze Entity
-			DrawMissionText2("~g~Parfait!~s~ Continuer comme sa!", 5000)
+			DrawMissionText2("~g~Parfait!~s~ Continuez comme ça!", 5000)
 			onTestEvent = 4
 		end
 	end	
@@ -305,13 +331,13 @@ Citizen.CreateThread(function()
 			onTestBlipp = AddBlipForCoord(178.55052185059,-1401.7551269531,28.725154876709)
 			N_0x80ead8e2e1d5d52e(onTestBlipp)
 			SetBlipRoute(onTestBlipp, 1)
-		    DrawMissionText2("Faite un ~r~stop~s~ et regarder votre ~y~Gauche~s~ Avant d'entrer dans la circulation", 5000)
+		    DrawMissionText2("~r~arrêtez vous~s~ et regardez sur votre ~y~Gauche~s~ Avant de vous engager", 5000)
 			PlaySound(-1, "RACE_PLACED", "HUD_AWARDS", 0, 0, 1)
 			FreezeEntityPosition(GetVehiclePedIsUsing(GetPlayerPed(-1)), true) -- Freeze Entity
 			Citizen.Wait(6000)
 			FreezeEntityPosition(GetVehiclePedIsUsing(GetPlayerPed(-1)), false) -- Freeze Entity
-			DrawMissionText2("~g~Parfait!~s~ prenez maintenant a ~y~Droite~s~ Et choisissez votre voie", 5000)
-			drawNotification("Region: ~y~Town\n~s~Limitation de vitesse: ~y~80 km/h\n~s~Points d'erreur: ~y~".. Error.."/4")
+			DrawMissionText2("~g~Parfait!~s~ prenez maintenant à ~y~Droite~s~ Et choisissez votre voie", 5000)
+			drawNotification("Region: ~y~Town\n~s~Vitesse Maximale: ~y~80 km/h\n~s~Mauvais Points: ~y~".. Error.."/4")
 			SpeedControl = 2
 			onTestEvent = 5
 			Citizen.Wait(4000)
@@ -328,7 +354,7 @@ Citizen.CreateThread(function()
 			onTestBlipp = AddBlipForCoord(113.16044616699,-1365.2762451172,28.725179672241)
 			N_0x80ead8e2e1d5d52e(onTestBlipp)
 			SetBlipRoute(onTestBlipp, 1)
-		    DrawMissionText2("Allumer vos ~y~phare~s~ !", 5000)
+		    DrawMissionText2("Allumez vos ~y~phares~s~ !", 5000)
 			onTestEvent = 6
 		end
 	end	
@@ -358,7 +384,7 @@ Citizen.CreateThread(function()
 			onTestBlipp = AddBlipForCoord(-355.14373779297,-1420.2822265625,27.868143081665)
 			N_0x80ead8e2e1d5d52e(onTestBlipp)
 			SetBlipRoute(onTestBlipp, 1)
-		    DrawMissionText2("Assurez-vous de vous arrêter pour le passage des véhicules !", 5000)
+		    DrawMissionText2("Assurez-vous de vous arrêter pour laisser passer les véhicules !", 5000)
 			onTestEvent = 8
 		end
 	end			
@@ -401,9 +427,9 @@ Citizen.CreateThread(function()
 			onTestBlipp = AddBlipForCoord(-463.23712158203,-1592.1785888672,37.519771575928)
 			N_0x80ead8e2e1d5d52e(onTestBlipp)
 			SetBlipRoute(onTestBlipp, 1)
-		    DrawMissionText2("Il est temps de conduire sur la route, regarder votre vitesse !", 5000)
+		    DrawMissionText2("Il est temps de conduire sur la route, surveillez votre vitesse !", 5000)
 			PlaySound(-1, "RACE_PLACED", "HUD_AWARDS", 0, 0, 1)
-			drawNotification("Region: ~y~Freeway\n~s~Limitation de vitesse: ~y~120 km/h\n~s~Points d'erreur: ~y~".. Error.."/4")
+			drawNotification("Region: ~y~Freeway\n~s~Vitesse Maximale: ~y~120 km/h\n~s~Mauvais points: ~y~".. Error.."/4")
 			onTestEvent = 11
 			SpeedControl = 3
 			Citizen.Wait(4000)
@@ -462,8 +488,8 @@ Citizen.CreateThread(function()
 			onTestBlipp = AddBlipForCoord(1163.6030273438,-1841.7713623047,35.679168701172)
 			N_0x80ead8e2e1d5d52e(onTestBlipp)
 			SetBlipRoute(onTestBlipp, 1)
-			DrawMissionText2("En entrant en ville, regardez votre vitesse!", 5000)
-			drawNotification("~r~Ralentissez!\n~s~Region: ~y~Town\n~s~Limitation de vitesse: ~y~80 km/h\n~s~:Points d'erreur ~y~".. Error.."/4")
+			DrawMissionText2("En entrant en ville, réduisez votre vitesse!", 5000)
+			drawNotification("~r~Ralentissez!\n~s~Region: ~y~Town\n~s~Vitesse Maximale: ~y~80 km/h\n~s~:Mauvais Points ~y~".. Error.."/4")
 			onTestEvent = 15
 		end
 	end		
@@ -479,8 +505,8 @@ Citizen.CreateThread(function()
 			N_0x80ead8e2e1d5d52e(onTestBlipp)
 			SetBlipRoute(onTestBlipp, 1)
 			PlaySound(-1, "RACE_PLACED", "HUD_AWARDS", 0, 0, 1)
-		    DrawMissionText2("Bon travail, revenons maintenant!", 5000)
-			drawNotification("Region: ~y~Town\n~s~Limitation de vitesse:: ~y~80 km/h\n~s~Points d'erreur: ~y~".. Error.."/4")
+		    DrawMissionText2("Bon travail, rentrons maintenant!", 5000)
+			drawNotification("Region: ~y~Town\n~s~Vitesse Maximale:: ~y~80 km/h\n~s~Vitesse Maximale: ~y~".. Error.."/4")
 			SpeedControl = 2
 			onTestEvent = 16
 		end
@@ -545,7 +571,7 @@ RegisterNUICallback('close', function(data, cb)
   closeGui()
   cb('ok')
   TriggerServerEvent('dmv:success')
-  DrawMissionText2("~b~Le test est passé, vous pouvez maintenant passer au test de conduite", 2000)	
+  DrawMissionText2("~b~Félicitations ! Vous avez votre code ! Vous pouvez maintenant passer au test de conduite", 2000)	
   TestDone = 0
   onTtest = 3
 end)
@@ -553,7 +579,7 @@ end)
 RegisterNUICallback('kick', function(data, cb)
     closeGui()
     cb('ok')
-    DrawMissionText2("~r~Vous avez échoué au test, vous pourriez essayer encore un autre jour", 2000)	
+    DrawMissionText2("~r~Vous avez raté votre code ! Vous pourrez réessayer une autre fois !", 2000)	
     onTtest = 0
 	testblock = 1
 end)
@@ -602,14 +628,14 @@ Citizen.CreateThread( function()
                     speedLimit = speedLimit + 0.45
                     SetEntityMaxSpeed(vehicle, speedLimit)
 					PlaySound(-1, "NAV_UP_DOWN", "HUD_FRONTEND_DEFAULT_SOUNDSET", 0, 0, 1)
-					DisplayHelpText("Vitesse maximum ajustée a ".. math.floor(speedLimit*3.6).. "kmh")
+					DisplayHelpText("Vitesse maximum ajustée à ".. math.floor(speedLimit*3.6).. "kmh")
                 end
             elseif IsControlJustPressed(1, 173) then
                 if CruiseControl == 1 then
                     speedLimit = speedLimit - 0.45
                     SetEntityMaxSpeed(vehicle, speedLimit)
 					PlaySound(-1, "NAV_UP_DOWN", "HUD_FRONTEND_DEFAULT_SOUNDSET", 0, 0, 1)	
-					DisplayHelpText("Vitesse maximum ajustée a ".. math.floor(speedLimit*3.6).. "kmh")
+					DisplayHelpText("Vitesse maximum ajustée à ".. math.floor(speedLimit*3.6).. "kmh")
                 end
             end
         end
@@ -681,7 +707,7 @@ RegisterNUICallback('close', function(data, cb)
   closeGui()
   cb('ok')
   TriggerServerEvent('dmv:success')
-  DrawMissionText2("~b~Le test est passé, vous pouvez maintenant passer au test de conduite", 2000)	
+  DrawMissionText2("~b~Félicitations ! Vous avez votre code ! Vous pouvez maintenant passer au test de conduite", 2000)	
   TestDone = 0
   onTtest = 3
 end)
@@ -689,7 +715,7 @@ end)
 RegisterNUICallback('kick', function(data, cb)
     closeGui()
     cb('ok')
-    DrawMissionText2("~r~Vous avez échoué au test, vous pourriez essayer encore un autre jour", 2000)	
+    DrawMissionText2("~r~Vous avez raté votre code ! Vous pourrez réessayer une autre fois !", 2000)	
     onTtest = 0
 	testblock = 1
 end)
